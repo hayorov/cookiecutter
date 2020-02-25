@@ -21,3 +21,4 @@ Various advanced topics regarding cookiecutter usage.
    dict_variables
    template_extensions
    directories
+   local_extensions
