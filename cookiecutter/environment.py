@@ -31,9 +31,11 @@ class ExtensionLoaderMixin(object):
             'cookiecutter.extensions.SlugifyExtension',
             'jinja2_time.TimeExtension',
         ]
-        extensions = default_extensions + \
-            self._read_extensions(context) + \
-            self._read_local_extensions(context)
+        extensions = (
+            default_extensions
+            + self._read_extensions(context)
+            + self._read_local_extensions(context)
+        )
 
         try:
             super(ExtensionLoaderMixin, self).__init__(extensions=extensions, **kwargs)
