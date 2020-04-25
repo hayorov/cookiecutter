@@ -4,6 +4,7 @@
 
 import json
 import string
+
 try:
     # Python 3.6 and above
     from secrets import choice
@@ -11,6 +12,7 @@ except ImportError:
     from random import choice
 
 from jinja2.ext import Extension
+from slugify import slugify as pyslugify
 
 
 class JsonifyExtension(Extension):
@@ -39,4 +41,19 @@ class RandomStringExtension(Extension):
             else:
                 corpus = string.ascii_letters
             return "".join(choice(corpus) for _ in range(length))
+
         environment.globals.update(random_ascii_string=random_ascii_string)
+
+
+class SlugifyExtension(Extension):
+    """Jinja2 Extension to slugify string."""
+
+    def __init__(self, environment):
+        """Jinja2 Extension constructor."""
+        super(SlugifyExtension, self).__init__(environment)
+
+        def slugify(value, **kwargs):
+            """Slugifies the value."""
+            return pyslugify(value, **kwargs)
+
+        environment.filters['slugify'] = slugify
