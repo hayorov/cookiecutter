@@ -2,6 +2,7 @@
 
 """Functions for prompting the user for project info."""
 
+import ast
 from collections import OrderedDict
 import json
 
@@ -167,6 +168,16 @@ def prompt_choice_for_config(cookiecutter_dict, env, key, options, no_input):
     Each of the possible choices is rendered beforehand.
     """
     rendered_options = [render_variable(env, raw, cookiecutter_dict) for raw in options]
+
+    # W/A: Support custom @list syntax for dynamic list generation from the template expression
+    # Format: key = ["@list", "{% template expression %}"]
+    if options[0] == '@list' and len(options) == 2 and '{%' in options[1]:
+        try:
+            rendered_options = [value.strip() for value in ast.literal_eval(rendered_options[1])]
+        except (ValueError, SyntaxError):
+            pass
+    if no_input:
+        return rendered_options[0]
 
     if no_input:
         return rendered_options[0]
